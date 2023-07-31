@@ -2,9 +2,9 @@
 variable "instance_types" {
   description = "EC2 Instance Types"
   type        = map(string)
-  default     = {
-    "jenkins-master" = "t2.medium"
-    "jenkins-node" = "t2.micro"
+  default = {
+    "jenkins-master"     = "t2.small"
+    "jenkins-node"       = "t2.micro"
     "ansible-controller" = "t2.small"
   }
 }
@@ -27,8 +27,18 @@ variable "ami_ids" {
   description = "AMI IDs"
   type        = map(string)
   default = {
-    "jenkins-master" = "ami-053b0d53c279acc90"
-    "jenkins-node" = "ami-053b0d53c279acc90"
+    "jenkins-master"     = "ami-053b0d53c279acc90"
+    "jenkins-node"       = "ami-053b0d53c279acc90"
     "ansible-controller" = "ami-053b0d53c279acc90"
+  }
+}
+
+variable "setup_files" {
+  description = "Setup script for ansible controller"
+  type        = map(string)
+  default = {
+    "jenkins-master"     = "setup.sh"
+    "jenkins-node"       = "setup.sh"
+    "ansible-controller" = "ansible_setup.sh"
   }
 }

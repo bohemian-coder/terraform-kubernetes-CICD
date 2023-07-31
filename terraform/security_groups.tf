@@ -1,7 +1,7 @@
 resource "aws_security_group" "demo_sg" {
   name        = "${local.project}-sg"
   description = "Allow SSH inbound traffic"
-  vpc_id = module.vpc.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   ingress {
     description = "SSH from VPC"
