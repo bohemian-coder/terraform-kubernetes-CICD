@@ -1,0 +1,32 @@
+---
+- name: Setup Jenkins managed node server
+  hosts: jenkins-node
+  become: true
+  tasks:
+
+    - name: Update hostname
+      ansible.builtin.hostname:
+        name: jenkins-node
+
+    - name: Update server repository and cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install java JRE
+      ansible.builtin.apt:
+        name: openjdk-11-jre
+        state: present
+        update_cache: true
+
+    - name: Download maven package pre-installation
+      ansible.builtin.get_url:
+        url: https://dlcdn.apache.org/maven/maven-3/3.9.3/binaries/apache-maven-3.9.3-bin.tar.gz
+        dest: /opt
+        mode: "0777"
+
+    - name: Extract Maven package
+      ansible.builtin.unarchive:
+        src: /opt/apache-maven-3.9.3-bin.tar.gz
+        dest: /opt
+        remote_src: true

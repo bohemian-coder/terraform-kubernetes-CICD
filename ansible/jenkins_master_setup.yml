@@ -3,34 +3,38 @@
   hosts: jenkins-master
   become: true
   tasks:
+
+    - name: Set server hostname
+      ansible.builtin.hostname:
+        name: jenkins-master
+
     - name: Add Jenkins signing key
       ansible.builtin.apt_key:
-      url: https://pkg.jenkins.io/debian/jenkins.io-2023.key
-      state: present
-    
+        url: https://pkg.jenkins.io/debian/jenkins.io-2023.key
+        state: present
+
     - name: Add Jenkins repository
       ansible.builtin.apt_repository:
-      repo: 'deb https://pkg.jenkins.io/debian binary/'
-      state: present
+        repo: 'deb https://pkg.jenkins.io/debian binary/'
+        state: present
 
     - name: Install java JRE
       ansible.builtin.apt:
         name: openjdk-11-jre
         state: present
-        update_cache: yes
-    
+        update_cache: true
+
     - name: Install jenkins
       ansible.builtin.apt:
         name: jenkins
         state: present
-    
+
     - name: Start jenkins service
       ansible.builtin.service:
         name: jenkins
         state: started
-    
+
     - name: Enable jenkins at startup time
       ansible.builtin.service:
         name: jenkins
-        enabled: yes
-        
+        enabled: true
