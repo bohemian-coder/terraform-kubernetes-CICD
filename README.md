@@ -2,7 +2,7 @@
 
   
 ### A Complete CICD pipeline:
-  
+* Sample application used: [Basic-Java-App](https://github.com/bohemian-coder/basic-java-app)
 
 - **Terraform**
 	- Provision VPC, Subnets, Security Groups, Internet gateway, Availability zones and EC2 instances
