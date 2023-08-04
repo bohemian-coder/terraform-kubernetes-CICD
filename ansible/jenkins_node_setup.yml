@@ -19,14 +19,61 @@
         state: present
         update_cache: true
 
-    - name: Download maven package pre-installation
-      ansible.builtin.get_url:
-        url: https://dlcdn.apache.org/maven/maven-3/3.9.3/binaries/apache-maven-3.9.3-bin.tar.gz
-        dest: /opt
+    # - name: Download maven package pre-installation
+    #   ansible.builtin.get_url:
+    #     url: https://dlcdn.apache.org/maven/maven-3/3.9.4/binaries/apache-maven-3.9.4-bin.tar.gz
+    #     dest: /opt
+    #     mode: "0777"
+
+    # - name: Extract Maven package
+    #   ansible.builtin.unarchive:
+    #     src: /opt/apache-maven-3.9.3-bin.tar.gz
+    #     dest: /opt
+    #     remote_src: true
+
+    - name: Install docker engine
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+
+    - name: Start docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+
+    - name: Grant all permissions on /var/run/docker.sock
+      ansible.builtin.file:
+        path: /var/run/docker.sock
+        state: file
         mode: "0777"
 
-    - name: Extract Maven package
+    - name: Enable docker to start at boot time
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+
+    - name: Download and install Kubectl
+      ansible.builtin.get_url:
+        url: https://dl.k8s.io/release/v1.27.4/bin/linux/amd64/kubectl
+        dest: /usr/local/bin/kubectl
+        mode: "0755"
+
+    - name: Download AWS Cli
+      ansible.builtin.get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /opt/awscliv2.zip
+        mode: "0777"
+      register: aws_cli_download
+
+    - name: Extract aws cli 2 package
       ansible.builtin.unarchive:
-        src: /opt/apache-maven-3.9.3-bin.tar.gz
+        src: /opt/awscliv2.zip
         dest: /opt
         remote_src: true
+      when: aws_cli_download.changed
+      register: aws_cli_unzip
+
+    - name: Install awscli 
+      ansible.builtin.shell:
+        cmd: sudo ./aws/install
+      when: aws_cli_unzip.changed

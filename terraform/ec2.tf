@@ -8,7 +8,7 @@ resource "aws_instance" "demo-server" {
     Name    = "${each.key}"
     Project = local.project
   }
-  user_data = file("${path.module}/${var.setup_files[each.key]}")
-  subnet_id = module.vpc.public_subnets[0]
+  user_data                   = file("${path.module}/${var.setup_files[each.key]}")
+  subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
 }
